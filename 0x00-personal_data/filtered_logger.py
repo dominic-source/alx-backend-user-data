@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
 """Module that manages users using filters loggers"""
-from typing import List
+from typing import List, Tuple
 import re
 import logging
+
+PII_FIELDS = ("email", "phone", "ssn", "password", "ip")
 
 
 def filter_datum(fields: List[str], redaction: str,
@@ -23,12 +25,23 @@ class RedactingFormatter(logging.Formatter):
     FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
     SEPARATOR = ";"
 
-    def __init__(self, fields: List[str]):
+    def __init__(self, fields: Tuple[str]):
         super(RedactingFormatter, self).__init__(self.FORMAT)
-        self.fields: List[str] = fields
+        self.fields: Tuple[str] = fields
 
     def format(self, record: logging.LogRecord) -> str:
         """user format NotImplementedError"""
         record.msg: record.msg = filter_datum(self.fields, self.REDACTION,
                                               record.msg, self.SEPARATOR)
         return super().format(record)
+
+
+def get_logger() -> logging.Logger:
+    """This function will help us get the logger"""
+    logger = logging.getLogger("user_data")
+    logger.setLevel(logging.INFO)
+
+    handler = logging.StreamHandler()
+    handler.setFormatter(RedactingFormatter(PII_FIELDS))
+
+    return logger
