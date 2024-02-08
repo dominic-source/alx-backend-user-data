@@ -63,3 +63,21 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
             database=os.environ.get("PERSONAL_DATA_DB_NAME")
             )
     return connection
+
+
+def main() -> None:
+    """Main function for our python script"""
+    db = get_db()
+
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM users")
+    logger = get_logger()
+    for row in cursor:
+        string1 = "name={}; email={}; phone={}; ssn={}; password={}; "
+        string2 = "ip={}; last_login={}; user_agent={};"
+        string = (string1 + string2).format(*row)
+        logger.info(string)
+
+
+if __name__ == '__main__':
+    main()
