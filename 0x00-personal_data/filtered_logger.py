@@ -4,6 +4,8 @@
 from typing import List, Tuple
 import re
 import logging
+import os
+import mysql.connector
 
 PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 
@@ -50,3 +52,17 @@ def get_logger() -> logging.Logger:
     # Disable propagation
     logger.propagate = False
     return logger
+
+
+def get_db():
+    """Get the database of the application"""
+
+    os.environ["PERSONAL_DATA_DB_USERNAME"] = "root"
+    os.environ["PERSONAL_DATA_DB_HOST"] = "localhost"
+    os.environ["PERSONAL_DATA_DB_PASSWORD"] = ""
+    connector = mysql.connector.connect(
+            user=os.environ["PERSONAL_DATA_DB_USERNAME"],
+            host=os.environ["PERSONAL_DATA_DB_HOST"],
+            password=os.environ["PERSONAL_DATA_DB_PASSWORD"],
+            )
+    return connector
