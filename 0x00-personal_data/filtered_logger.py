@@ -4,6 +4,8 @@
 from typing import List, Tuple
 import re
 import logging
+import os
+import mysql.connector
 
 PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 
@@ -50,3 +52,32 @@ def get_logger() -> logging.Logger:
     # Disable propagation
     logger.propagate = False
     return logger
+
+
+def get_db() -> mysql.connector.connection.MySQLConnection:
+    """Get the database of the application"""
+    connection = mysql.connector.connect(
+            user=os.environ.get("PERSONAL_DATA_DB_USERNAME", "root"),
+            host=os.environ.get("PERSONAL_DATA_DB_HOST", "localhost"),
+            password=os.environ.get("PERSONAL_DATA_DB_PASSWORD", ""),
+            database=os.environ.get("PERSONAL_DATA_DB_NAME", "my_db")
+            )
+    return connection
+
+
+def main() -> None:
+    """Main function for our python script"""
+    db = get_db()
+
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM users")
+    logger = get_logger()
+    for row in cursor:
+        string1 = "name={}; email={}; phone={}; ssn={}; password={}; "
+        string2 = "ip={}; last_login={}; user_agent={};"
+        string = (string1 + string2).format(*row)
+        logger.info(string)
+
+
+if __name__ == '__main__':
+    main()
