@@ -16,6 +16,17 @@ def authorized() -> str:
     abort(401)
 
 
+@app_views.route('forbidden', methods=['GET'], strict_slashes=False)
+def forbidden_route() -> str:
+    """User of the forbidden route
+
+    GET /api/v1/forbidden
+    Return:
+      - raise an abort 403
+    """
+    abort(403)
+
+
 @app_views.route('/status', methods=['GET'], strict_slashes=False)
 def status() -> str:
     """ GET /api/v1/status
