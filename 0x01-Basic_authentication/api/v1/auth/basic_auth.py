@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-""" A Module that inherits from the authorisation 
+""" A Module that inherits from the authorisation
 class
 """
 from api.v1.auth.auth import Auth
