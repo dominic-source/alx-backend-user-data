@@ -16,6 +16,9 @@ auth = None
 if "auth" == os.environ.get("AUTH_TYPE"):
     from api.v1.auth.auth import Auth
     auth = Auth()
+elif "basic_auth" == os.environ.get("AUTH_TYPE"):
+    from api.v1.auth.basic_auth import BasicAuth
+    auth = BasicAuth()
 
 
 @app.before_request
