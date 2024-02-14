@@ -33,6 +33,7 @@ def before_request() -> str:
                 abort(401)
             if not auth.current_user(request):
                 abort(403)
+            request.current_user = auth.current_user(request)
 
 
 @app.errorhandler(404)
