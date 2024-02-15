@@ -3,6 +3,7 @@
 """This module is set to help us learn about sessions
 and how it works
 """
+from models.user import User
 import uuid
 from api.v1.auth.auth import Auth
 
@@ -28,3 +29,9 @@ class SessionAuth(Auth):
         if type(session_id) != str:
             return None
         return SessionAuth.user_id_by_session_id.get(session_id)
+
+    def current_user(self, request=None):
+        """get the current user"""
+        cookie = self.session_cookie(request)
+        user_id = self.user_id_for_session_id(cookie)
+        return User.get(user_id)
