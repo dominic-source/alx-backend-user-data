@@ -30,9 +30,13 @@ def before_request() -> str:
     """Filtering each request"""
     if auth is not None:
         lst = ['/api/v1/status/', '/api/v1/unauthorized/',
-               '/api/v1/forbidden/']
+               '/api/v1/forbidden/', '/api/v1/auth_session/login/']
         res = auth.require_auth(request.path, lst)
         if res:
+            if not auth.session_cookie(request
+                                       ) and not auth.authorization_header(
+                                               request):
+                abort(401)
             if not auth.authorization_header(request):
                 abort(401)
             if not auth.current_user(request):
