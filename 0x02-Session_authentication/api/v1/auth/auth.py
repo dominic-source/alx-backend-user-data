@@ -2,6 +2,7 @@
 
 """This module contains the authentication class implmentation
 """
+import os
 from typing import List, TypeVar
 from flask import request
 
@@ -37,3 +38,10 @@ class Auth:
     def current_user(self, request=None) -> TypeVar('User'):
         """Verify current user of a url"""
         return None
+
+    def session_cookie(self, request=None):
+        """manage session cookies"""
+        if request is None:
+            return None
+        s_name = os.environ.get("SESSION_NAME")
+        return request.cookies.get(s_name)
