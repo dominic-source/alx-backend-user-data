@@ -13,12 +13,16 @@ app = Flask(__name__)
 app.register_blueprint(app_views)
 CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 auth = None
-if "auth" == os.environ.get("AUTH_TYPE"):
+type_auth = os.environ.get("AUTH_TYPE")
+if "auth" == type_auth:
     from api.v1.auth.auth import Auth
     auth = Auth()
-elif "basic_auth" == os.environ.get("AUTH_TYPE"):
+elif "basic_auth" == type_auth:
     from api.v1.auth.basic_auth import BasicAuth
     auth = BasicAuth()
+elif "session_auth" == type_auth:
+    from api.v1.auth.session_auth import SessionAuth
+    auth = SessionAuth()
 
 
 @app.before_request
