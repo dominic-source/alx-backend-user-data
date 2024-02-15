@@ -27,3 +27,14 @@ def session_post() -> str:
     response = make_response(jsonify(user[0].to_json()))
     response.set_cookie(os.environ.get("SESSION_NAME"), session_id)
     return response
+
+
+@app_views.route('/auth_session/logout',
+                 methods=['DELETE'], strict_slashes=False)
+def del_session() -> str:
+    """Delete a user session"""
+    from api.v1.app import auth
+    destroy = auth.destroy_session(request)
+    if not destroy:
+        abort(404)
+    return jsonify({}), 200
