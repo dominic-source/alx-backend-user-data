@@ -36,7 +36,7 @@ def before_request() -> str:
             if not auth.session_cookie(request
                                        ) and not auth.authorization_header(
                                                request):
-                abort(401)
+                abort(403)
             if not auth.authorization_header(request):
                 abort(401)
             if not auth.current_user(request):
