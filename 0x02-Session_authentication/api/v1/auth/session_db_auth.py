@@ -25,7 +25,7 @@ class SessionDBAuth(SessionExpAuth):
         if type(session_id) != str:
             return None
         data = UserSession.search({"session_id": session_id})
-        if not data[0]:
+        if not data:
             return None
         if self.session_duration <= 0:
             return data[0].user_id
@@ -44,9 +44,9 @@ class SessionDBAuth(SessionExpAuth):
         session_id = self.session_cookie(request)
         if session_id is None:
             return False
-        user = user_id_for_session_id(session_id)
+        user = self.user_id_for_session_id(session_id)
         if not user:
             return False
         d_user = UserSession.search({"session_id": session_id})
-        d_user[0].remover()
+        d_user[0].remove()
         return True
