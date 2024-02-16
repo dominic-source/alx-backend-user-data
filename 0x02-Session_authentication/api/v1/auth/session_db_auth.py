@@ -43,7 +43,7 @@ class SessionDBAuth(SessionExpAuth):
         """destroy a user session"""
         cookie_name = os.environ.get("SESSION_NAME")
         if not request:
-            False
+            return False
         session_id = request.cookies.get(cookie_name)
         if session_id is None:
             return False
