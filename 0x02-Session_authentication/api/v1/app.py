@@ -23,6 +23,9 @@ elif "basic_auth" == type_auth:
 elif "session_auth" == type_auth:
     from api.v1.auth.session_auth import SessionAuth
     auth = SessionAuth()
+elif "session_exp_auth" == type_auth:
+    from api.v1.auth.session_exp_auth import SessionExpAuth
+    auth = SessionExpAuth()
 
 
 @app.before_request
