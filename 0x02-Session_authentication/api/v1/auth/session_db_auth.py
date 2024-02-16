@@ -3,6 +3,7 @@
 """Implement the session database"""
 from api.v1.auth.session_exp_auth import SessionExpAuth
 from models.user_session import UserSession
+from datetime import datetime, timedelta
 
 
 class SessionDBAuth(SessionExpAuth):
@@ -21,10 +22,22 @@ class SessionDBAuth(SessionExpAuth):
         """get user id for session id"""
         if session_id is None:
             return None
-        user = UserSession.search({"session_id": session_id})
-        if not user:
+        if type(session_id) != str:
             return None
-        return user[0].user_id
+        data = UserSession.search({"session_id": session_id})
+        if not data:
+            return None
+        if self.session_duration <= 0:
+            return data[0].user_id
+        if not data[0].created_at:
+            return None
+        fromtime = data[0].created_at
+        dtime = fromtime + timedelta(
+                seconds=self.session_duration)
+        current_dt = datetime.now()
+        if dtime < current_dt:
+            return None
+        return data[0].user_id
 
     def destroy_session(self, request=None):
         """destroy a user session"""
