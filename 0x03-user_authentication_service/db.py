@@ -42,6 +42,8 @@ class DB:
 
     def find_user_by(self, **kwargs: Dict[str, Union[int, str]]) -> User:
         """returns the first row foun in the users table"""
+        if not kwargs:
+            raise InvalidRequestError
         for key in kwargs.keys():
             if key not in ['id', 'email', 'hashed_password',
                            'session_id', 'reset_token']:
@@ -56,6 +58,8 @@ class DB:
     def update_user(self, user_id: int,
                     **kwargs: Dict[str, Union[str, int]]) -> None:
         """update users info"""
+        if not kwargs:
+            return None
         user = self.find_user_by(id=user_id)
         for key, value in kwargs.items():
             if key not in ['id', 'email', 'hashed_password',
