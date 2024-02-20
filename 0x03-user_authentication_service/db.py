@@ -43,7 +43,8 @@ class DB:
     def find_user_by(self, **kwargs: dict) -> User:
         """returns the first row foun in the users table"""
         for key in kwargs.keys():
-            if key not in ['id', 'email', 'hashed_password']:
+            if key not in ['id', 'email', 'hashed_password',
+                           'session_id', 'reset_token']:
                 raise InvalidRequestError
         data = self._session.query(User).filter_by(**kwargs).first()
         if not data:
@@ -54,7 +55,9 @@ class DB:
         """update users info"""
         user = self.find_user_by(id=user_id)
         for key, value in kwargs.items():
-            if key not in ['id', 'email', 'hashed_password']:
+            if key not in ['id', 'email', 'hashed_password',
+                           'session_id', 'reset_token']:
                 raise ValueError
             setattr(user, key, value)
         self._session.commit()
+        return None
