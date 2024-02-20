@@ -50,9 +50,9 @@ def logout() -> str:
     session_id = request.cookies.get("session_id")
     user = AUTH.get_user_from_session_id(session_id)
     if not user:
-        flask.abort(403)
+        return jsonify({"message": "forbidden"}), 403
     AUTH.destroy_session(int(user.id))
-    redirect('/')
+    return redirect('/')
 
 
 if __name__ == "__main__":
