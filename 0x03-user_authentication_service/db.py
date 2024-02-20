@@ -8,7 +8,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
-from typing import Mapping, Union
+from typing import Mapping, Union, Dict
 from user import Base, User
 
 
@@ -40,22 +40,21 @@ class DB:
         self._session.commit()
         return user
 
-    def find_user_by(self, **kwargs: Mapping[str, Union[int, str]]) -> User:
+    def find_user_by(self, **kwargs: Dict[str, Union[int, str]]) -> User:
         """returns the first row foun in the users table"""
         for key in kwargs.keys():
             if key not in ['id', 'email', 'hashed_password',
                            'session_id', 'reset_token']:
                 raise InvalidRequestError
         data = self._session.query(User).filter_by(**kwargs).first()
-        if not data:
+        if data is None or not data:
             raise NoResultFound
         return data
 
     def update_user(self, user_id: int,
-                    **kwargs: Mapping[str, Union[int, str]]) -> None:
+                    **kwargs: Dict[str, Union[str, int]]) -> None:
         """update users info"""
-        id_d = {"id": user_id}
-        user = self.find_user_by(id_d)
+        user = self.find_user_by(id=user_id)
         for key, value in kwargs.items():
             if key not in ['id', 'email', 'hashed_password',
                            'session_id', 'reset_token']:
