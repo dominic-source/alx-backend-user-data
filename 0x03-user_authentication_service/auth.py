@@ -7,6 +7,7 @@ import bcrypt
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import InvalidRequestError
 import uuid
+from typing import Union
 
 
 def _hash_password(password: str) -> bytes:
@@ -55,6 +56,18 @@ class Auth:
             self._db.update_user(data.id, session_id=session_id)
             return session_id
         except ValueError:
+            return None
+        except NoResultFound:
+            return None
+        except InvalidRequestError:
+            return None
+
+    def get_user_from_session_id(self, session_id: str) -> Union[User, None]:
+        """Get user from session id"""
+        if not session_id:
+            return None
+        try:
+            data = self._db.find_user_by(session_id=session_id)
             return None
         except NoResultFound:
             return None
