@@ -47,7 +47,7 @@ class Auth:
         except InvalidRequestError:
             return False
 
-    @property
-    def _generate_uuid(self) -> str:
-        """Generate UUID"""
-        return str(uuid.uuid4())
+
+def _generate_uuid(self) -> str:
+    """Generate UUID"""
+    return str(uuid.uuid4())
