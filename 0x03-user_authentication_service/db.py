@@ -47,8 +47,10 @@ class DB:
                            'session_id', 'reset_token']:
                 raise InvalidRequestError
         data = self._session.query(User).filter_by(**kwargs).first()
-        if data is None or not data:
+        if data is None:
             raise NoResultFound
+        elif self._session.query(User).filter_by(**kwargs).count() > 1:
+            raise InvalidRequestError
         return data
 
     def update_user(self, user_id: int,
