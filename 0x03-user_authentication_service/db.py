@@ -40,7 +40,7 @@ class DB:
         self._session.commit()
         return user
 
-    def find_user_by(self, **kwargs: Dict[str, Union[int, str]]) -> User:
+    def find_user_by(self, **kwargs: Union[int, str]) -> User:
         """returns the first row foun in the users table"""
         if not kwargs:
             raise InvalidRequestError
