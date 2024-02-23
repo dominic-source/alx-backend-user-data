@@ -40,7 +40,7 @@ class DB:
         self._session.commit()
         return user
 
-    def find_user_by(self, **kwargs: Union[int, str]) -> User:
+    def find_user_by(self, **kwargs) -> User:
         """returns the first row foun in the users table"""
         if not kwargs:
             raise InvalidRequestError
@@ -55,8 +55,7 @@ class DB:
             raise InvalidRequestError
         return data
 
-    def update_user(self, user_id: int,
-                    **kwargs: Dict[str, Union[str, int]]) -> None:
+    def update_user(self, user_id: int, **kwargs) -> None:
         """update users info"""
         if not kwargs:
             return None
